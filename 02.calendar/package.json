@@ -4,6 +4,7 @@
     "lint": "prettier --check . && eslint ."
   },
   "devDependencies": {
+    "date-fns": "^2.29.3",
     "eslint": "^8.28.0",
     "eslint-config-prettier": "^8.5.0",
     "minimist": "^1.2.7",
