@@ -5,20 +5,22 @@ const read = require("./reader");
 const Minimist = require("minimist");
 const { prompt } = require("enquirer");
 
-const db = new DB();
-const argv = Minimist(process.argv.slice(2));
+function main() {
+  const db = new DB();
+  const argv = Minimist(process.argv.slice(2));
 
-if (!process.stdin.isTTY) {
-  createMemo();
-} else {
-  if (argv.l) {
-    showAllMemos();
-  } else if (argv.r) {
-    showMemo();
+  if (!process.stdin.isTTY) {
+    createMemo(db);
+  } else {
+    if (argv.l) {
+      showAllMemos(db);
+    } else if (argv.r) {
+      showMemo(db);
+    }
   }
 }
 
-async function createMemo() {
+async function createMemo(db) {
   try {
     let lines = await read();
     await db.insert(lines.join("\n"));
@@ -28,14 +30,14 @@ async function createMemo() {
   }
 }
 
-async function showAllMemos() {
+async function showAllMemos(db) {
   let rows = await db.selectAll();
   for (let row of rows) {
     console.log(row.text.split("\n")[0]);
   }
 }
 
-async function showMemo() {
+async function showMemo(db) {
   let rows = await db.selectAll();
   let firstLines = [];
   for await (let row of rows) {
@@ -64,3 +66,5 @@ async function showMemo() {
   let selectedRow = await db.select(selectedFirstLine.id);
   console.log("\n" + selectedRow.text);
 }
+
+main();
