@@ -2,32 +2,31 @@
 
 const DB = require("./db");
 const read = require("./reader");
+const Select = require("./select");
 const Minimist = require("minimist");
-const { prompt } = require("enquirer");
 
-function main() {
+async function main() {
   const db = new DB();
   const argv = Minimist(process.argv.slice(2));
 
   if (!process.stdin.isTTY) {
-    createMemo(db);
-  } else {
-    if (argv.l) {
-      showAllMemos(db);
-    } else if (argv.r) {
-      showMemo(db);
-    }
+    await createMemo(db);
+    return;
   }
+
+  if (argv.l) {
+    showAllMemos(db);
+  } else if (argv.r) {
+    showMemo(db);
+  }
+
+  db.close;
 }
 
 async function createMemo(db) {
-  try {
-    let lines = await read();
-    await db.insert(lines.join("\n"));
-    console.log("\nSaving is complete.");
-  } finally {
-    db.close;
-  }
+  let lines = await read();
+  await db.insert(lines.join("\n"));
+  console.log("\nSaving is complete.");
 }
 
 async function showAllMemos(db) {
@@ -39,6 +38,11 @@ async function showAllMemos(db) {
 
 async function showMemo(db) {
   let rows = await db.selectAll();
+  if (rows.length == 0) {
+    console.log("memo is empty.");
+    return;
+  }
+
   let firstLines = [];
   for await (let row of rows) {
     console.log(row.text.split("\n")[0]);
@@ -48,20 +52,8 @@ async function showMemo(db) {
     });
   }
 
-  if (firstLines.length == 0) {
-    console.log("memo is empty.");
-    return;
-  }
-
-  const selectedFirstLine = await prompt({
-    type: "select",
-    name: "id",
-    message: "Choose a note you want to see:",
-    choices: firstLines,
-    result() {
-      return this.focused.value;
-    },
-  });
+  const select = new Select(firstLines);
+  const selectedFirstLine = await select.selectItem("id");
 
   let selectedRow = await db.select(selectedFirstLine.id);
   console.log("\n" + selectedRow.text);
