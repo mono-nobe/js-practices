@@ -1,28 +1,27 @@
 #! /usr/bin/env node
 
-const DB = require("./db");
+const Memo = require("./memo");
 const Select = require("./select");
 const Minimist = require("minimist");
 const Readline = require("readline");
 
-function main() {
-  const db = new DB();
+async function main() {
+  const memo = new Memo();
   const argv = Minimist(process.argv.slice(2));
 
   if (!process.stdin.isTTY) {
-    createMemo(db);
-    return;
+    await createMemo(memo);
   }
 
   if (argv.l) {
-    showAllMemos(db);
+    await showAllMemos(memo);
   } else if (argv.r) {
-    showMemo(db);
+    await showMemo(memo);
   } else if (argv.d) {
-    deleteMemo(db);
+    await deleteMemo(memo);
   }
 
-  db.closeDB();
+  memo.close();
 }
 
 function readStdin() {
@@ -43,62 +42,54 @@ function readStdin() {
   });
 }
 
-async function createMemo(db) {
+async function createMemo(memo) {
   let lines = await readStdin();
-  await db.insert(lines.join("\n"));
+  await memo.insert(lines.join("\n"));
   console.log("\nSaving is complete.");
 }
 
-async function showAllMemos(db) {
-  let rows = await db.selectAll();
+async function showAllMemos(memo) {
+  let rows = await memo.selectAll();
   for (let row of rows) {
     console.log(row.text.split("\n")[0]);
   }
 }
 
-async function showMemo(db) {
-  let firstLines = generateMemoOptions(db);
-  if (firstLines.length === 0) {
+async function showMemo(memo) {
+  let allMemos = await memo.selectAll();
+  if (allMemos.length === 0) {
     console.log("memo is empty.");
     return;
   }
 
-  const select = new Select(firstLines);
-  const selectedFirstLine = await select.selectItem("id");
-  let selectedRow = await db.select(selectedFirstLine.id);
+  let options = generateOptions(allMemos);
+  const select = new Select(options);
+  const selectedOption = await select.selectItem("id");
 
+  let selectedRow = await memo.select(selectedOption.id);
   console.log("\n" + selectedRow.text);
 }
 
-async function deleteMemo(db) {
-  let firstLines = generateMemoOptions(db);
-  if (firstLines.length === 0) {
+async function deleteMemo(memo) {
+  let allMemos = await memo.selectAll();
+  if (allMemos.length === 0) {
     console.log("memo is empty.");
     return;
   }
 
-  const select = new Select(firstLines);
-  const selectedFirstLine = await select.selectItem("id");
-  await db.delete(selectedFirstLine.id);
+  let options = generateOptions(allMemos);
+  const select = new Select(options);
+  const selectedOption = await select.selectItem("id");
 
+  await memo.delete(selectedOption.id);
   console.log("\nDeletion is complete.");
 }
 
-async function generateMemoOptions(db) {
-  let firstLines = [];
-  let rows = await db.selectAll();
-  if (rows.length === 0) {
-    return firstLines;
-  }
-
-  for await (let row of rows) {
-    firstLines.push({
-      name: row.text.split("\n")[0],
-      value: row.id,
-    });
-  }
-
-  return firstLines;
+async function generateOptions(targets) {
+  return targets.map((target) => ({
+    name: target.text.split("\n")[0],
+    value: target.id,
+  }));
 }
 
 main();

@@ -2,7 +2,7 @@
 
 const Sqlite3 = require("sqlite3");
 
-module.exports = class DB {
+module.exports = class Memo {
   constructor() {
     this.sqlite3 = new Sqlite3.Database("./db/memo.sqlite3");
   }
@@ -39,7 +39,7 @@ module.exports = class DB {
     });
   }
 
-  closeDB() {
+  close() {
     this.sqlite3.close;
   }
 };
