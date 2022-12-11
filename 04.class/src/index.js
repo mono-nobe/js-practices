@@ -49,9 +49,14 @@ async function createMemo(memo) {
 }
 
 async function showAllMemos(memo) {
-  let rows = await memo.selectAll();
-  for (let row of rows) {
-    console.log(row.text.split("\n")[0]);
+  let allMemos = await memo.selectAll();
+  if (allMemos.length === 0) {
+    console.log("memo is empty.");
+    return;
+  }
+
+  for (let memo of allMemos) {
+    console.log(memo.text.split("\n")[0]);
   }
 }
 
