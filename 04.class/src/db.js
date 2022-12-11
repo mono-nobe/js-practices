@@ -10,11 +10,7 @@ module.exports = class DB {
   selectAll() {
     return new Promise((resolve, reject) => {
       this.sqlite3.all("SELECT * FROM memos", (err, rows) => {
-        if (err) {
-          reject(new Error(err));
-        }
-
-        resolve(rows);
+        err ? reject(new Error(err)) : resolve(rows);
       });
     });
   }
@@ -22,11 +18,7 @@ module.exports = class DB {
   select(id) {
     return new Promise((resolve, reject) => {
       this.sqlite3.get("SELECT * FROM memos WHERE id = ?", id, (err, row) => {
-        if (err) {
-          reject(new Error(err));
-        }
-
-        resolve(row);
+        err ? reject(new Error(err)) : resolve(row);
       });
     });
   }
@@ -34,11 +26,7 @@ module.exports = class DB {
   insert(text) {
     return new Promise((resolve, reject) => {
       this.sqlite3.run("INSERT INTO memos(text) values(?)", text, (err) => {
-        if (err) {
-          reject(new Error(err));
-        }
-
-        resolve();
+        err ? reject(new Error(err)) : resolve();
       });
     });
   }
@@ -46,11 +34,7 @@ module.exports = class DB {
   delete(id) {
     return new Promise((resolve, reject) => {
       this.sqlite3.run("DELETE FROM memos WHERE id = ?", id, (err) => {
-        if (err) {
-          reject(new Error(err));
-        }
-
-        resolve();
+        err ? reject(new Error(err)) : resolve();
       });
     });
   }
