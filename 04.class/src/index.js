@@ -64,7 +64,7 @@ async function showMemo(memo) {
 
   let options = generateOptions(allMemos);
   const select = new Select(options);
-  const selectedOption = await select.selectItem("id");
+  const selectedOption = await select.selectItem("id", "see");
 
   let selectedRow = await memo.select(selectedOption.id);
   console.log("\n" + selectedRow.text);
@@ -79,7 +79,7 @@ async function deleteMemo(memo) {
 
   let options = generateOptions(allMemos);
   const select = new Select(options);
-  const selectedOption = await select.selectItem("id");
+  const selectedOption = await select.selectItem("id", "delete");
 
   await memo.delete(selectedOption.id);
   console.log("\nDeletion is complete.");

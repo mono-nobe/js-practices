@@ -7,13 +7,13 @@ module.exports = class Select {
     this.selectItems = selectItems;
   }
 
-  selectItem(name) {
+  selectItem(name, action) {
     return new Promise((resolve) => {
       resolve(
         prompt({
           type: "select",
           name: name,
-          message: "Choose a note you want to see:",
+          message: "Choose a note you want to " + action + ":",
           choices: this.selectItems,
           result() {
             return this.focused.value;
