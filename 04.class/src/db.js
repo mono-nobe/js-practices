@@ -54,4 +54,8 @@ module.exports = class DB {
       });
     });
   }
+
+  closeDB() {
+    this.sqlite3.close;
+  }
 };

@@ -20,7 +20,7 @@ function main() {
     showMemo(db);
   }
 
-  db.close;
+  db.closeDB();
 }
 
 function readStdin() {
