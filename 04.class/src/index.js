@@ -18,6 +18,8 @@ function main() {
     showAllMemos(db);
   } else if (argv.r) {
     showMemo(db);
+  } else if (argv.d) {
+    deleteMemo(db);
   }
 
   db.closeDB();
@@ -66,6 +68,20 @@ async function showMemo(db) {
   let selectedRow = await db.select(selectedFirstLine.id);
 
   console.log("\n" + selectedRow.text);
+}
+
+async function deleteMemo(db) {
+  let firstLines = generateMemoOptions(db);
+  if (firstLines.length === 0) {
+    console.log("memo is empty.");
+    return;
+  }
+
+  const select = new Select(firstLines);
+  const selectedFirstLine = await select.selectItem("id");
+  await db.delete(selectedFirstLine.id);
+
+  console.log("\nDeletion is complete.");
 }
 
 async function generateMemoOptions(db) {
