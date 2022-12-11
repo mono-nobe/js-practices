@@ -55,7 +55,7 @@ async function showAllMemos(db) {
 }
 
 async function showMemo(db) {
-  let firstLines = generateMemoChoices(db);
+  let firstLines = generateMemoOptions(db);
   if (firstLines.length === 0) {
     console.log("memo is empty.");
     return;
@@ -68,7 +68,7 @@ async function showMemo(db) {
   console.log("\n" + selectedRow.text);
 }
 
-async function generateMemoChoices(db) {
+async function generateMemoOptions(db) {
   let firstLines = [];
   let rows = await db.selectAll();
   if (rows.length === 0) {
@@ -81,6 +81,8 @@ async function generateMemoChoices(db) {
       value: row.id,
     });
   }
+
+  return firstLines;
 }
 
 main();
