@@ -20,7 +20,7 @@
           const responseText = await response.text();
           return new DOMParser().parseFromString(responseText, "text/html");
         } catch (err) {
-          throw new Error(err);
+          throw err;
         }
       }
 
