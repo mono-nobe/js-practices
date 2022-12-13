@@ -4,8 +4,8 @@ const DateFns = require("date-fns");
 
 const argv = require("minimist")(process.argv.slice(2));
 const today = new Date();
-const year = argv.y ? argv.y : today.getFullYear();
-const month = argv.m ? argv.m : today.getMonth() + 1;
+const year = argv.y || today.getFullYear();
+const month = argv.m || today.getMonth() + 1;
 const startDate = new Date(year, month - 1, 1);
 const endDate = DateFns.subDays(DateFns.addMonths(startDate, 1), 1);
 const targetDates = DateFns.eachDayOfInterval({
