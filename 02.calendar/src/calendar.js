@@ -20,11 +20,7 @@ let displayStr = "";
 displayStr += "   ".repeat(DateFns.getDay(targetDates[0]));
 
 for (let targetDate of targetDates) {
-  if (DateFns.getDate(targetDate) < 10) {
-    displayStr += " ";
-  }
-
-  displayStr += DateFns.getDate(targetDate).toString() + " ";
+  displayStr += DateFns.getDate(targetDate).toString().padStart(2, " ") + " ";
 
   if (DateFns.isSaturday(targetDate)) {
     displayStr += "\n";
