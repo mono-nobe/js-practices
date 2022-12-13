@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>fetch.html</h1>
+
+    <script>
+      async function fetch_html_dom(url) {
+        try {
+          const response = await fetch(url);
+          if (response.status !== 200) {
+            throw new Error(response.status);
+          }
+
+          const responseText = await response.text();
+          return new DOMParser().parseFromString(responseText, "text/html");
+        } catch (err) {
+          throw err;
+        }
+      }
+
+      fetch_html_dom("https://bootcamp.fjord.jp/")
+        .then((htmlDom) => console.log(htmlDom))
+        .catch((err) => console.log(err));
+    </script>
+  </body>
+</html>
