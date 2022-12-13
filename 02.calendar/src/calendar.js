@@ -17,10 +17,7 @@ console.log(month.toString().padStart(8, " ") + "月 " + year);
 console.log("日 月 火 水 木 金 土");
 
 let displayStr = "";
-
-if (!DateFns.isSunday(targetDates[0])) {
-  displayStr += "   ".repeat(DateFns.getISODay(targetDates[0]));
-}
+displayStr += "   ".repeat(DateFns.getDay(targetDates[0]));
 
 for (let targetDate of targetDates) {
   if (DateFns.getDate(targetDate) < 10) {
