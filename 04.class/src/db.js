@@ -1,5 +1,3 @@
-#! /usr/bin/env node
-
 const Sqlite3 = require("sqlite3");
 
 module.exports = class DB {

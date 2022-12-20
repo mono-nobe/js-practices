@@ -1,5 +1,3 @@
-#! /usr/bin/env node
-
 const CLI = require("./cli");
 
 module.exports = class Memo {
