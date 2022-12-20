@@ -26,7 +26,7 @@ async function main() {
 
 function readStdin() {
   return new Promise((resolve) => {
-    let lines = [];
+    const lines = [];
     const reader = Readline.createInterface({
       input: process.stdin,
       output: process.stdout,
@@ -43,13 +43,13 @@ function readStdin() {
 }
 
 async function createMemo(memo) {
-  let lines = await readStdin();
+  const lines = await readStdin();
   await memo.insert(lines.join("\n"));
   console.log("\nSaving is complete.");
 }
 
 async function showAllMemos(memo) {
-  let allMemos = await memo.selectAll();
+  const allMemos = await memo.selectAll();
   if (allMemos.length === 0) {
     console.log("memo is empty.");
     return;
@@ -61,28 +61,28 @@ async function showAllMemos(memo) {
 }
 
 async function showMemo(memo) {
-  let allMemos = await memo.selectAll();
+  const allMemos = await memo.selectAll();
   if (allMemos.length === 0) {
     console.log("memo is empty.");
     return;
   }
 
-  let options = generateOptions(allMemos);
+  const options = generateOptions(allMemos);
   const select = new Select(options);
   const selectedOption = await select.selectItem("id", "see");
 
-  let selectedRow = await memo.select(selectedOption.id);
+  const selectedRow = await memo.select(selectedOption.id);
   console.log("\n" + selectedRow.text);
 }
 
 async function deleteMemo(memo) {
-  let allMemos = await memo.selectAll();
+  const allMemos = await memo.selectAll();
   if (allMemos.length === 0) {
     console.log("memo is empty.");
     return;
   }
 
-  let options = generateOptions(allMemos);
+  const options = generateOptions(allMemos);
   const select = new Select(options);
   const selectedOption = await select.selectItem("id", "delete");
 
