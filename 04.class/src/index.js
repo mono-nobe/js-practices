@@ -1,6 +1,6 @@
 #! /usr/bin/env node
 
-const Memo = require("./memo");
+const DB = require("./db");
 const Select = require("./select");
 const Minimist = require("minimist");
 const Readline = require("readline");
@@ -8,22 +8,22 @@ const Readline = require("readline");
 const DBFilePath = "./db/memo.sqlite3";
 
 async function main() {
-  const memo = new Memo(DBFilePath);
+  const db = new DB(DBFilePath);
   const argv = Minimist(process.argv.slice(2));
 
   if (!process.stdin.isTTY) {
-    await createMemo(memo);
+    await createMemo(db);
   }
 
   if (argv.l) {
-    await showAllMemos(memo);
+    await showAllMemos(db);
   } else if (argv.r) {
-    await showMemo(memo);
+    await showMemo(db);
   } else if (argv.d) {
-    await deleteMemo(memo);
+    await deleteMemo(db);
   }
 
-  memo.close();
+  db.close();
 }
 
 function readStdin() {
@@ -44,14 +44,14 @@ function readStdin() {
   });
 }
 
-async function createMemo(memo) {
+async function createMemo(db) {
   const lines = await readStdin();
-  await memo.insert(lines.join("\n"));
+  await db.insert("memos", "text", lines.join("\n"));
   console.log("\nSaving is complete.");
 }
 
-async function showAllMemos(memo) {
-  const allMemos = await memo.selectAll();
+async function showAllMemos(db) {
+  const allMemos = await db.selectAll("memos");
   if (!existsMemo(allMemos)) {
     return;
   }
@@ -61,8 +61,8 @@ async function showAllMemos(memo) {
   }
 }
 
-async function showMemo(memo) {
-  const allMemos = await memo.selectAll();
+async function showMemo(db) {
+  const allMemos = await db.selectAll("memos");
   if (!existsMemo(allMemos)) {
     return;
   }
@@ -71,12 +71,12 @@ async function showMemo(memo) {
   const select = new Select(options);
   const selectedOption = await select.selectItem("id", "see");
 
-  const selectedRow = await memo.select(selectedOption.id);
+  const selectedRow = await db.select("memos", selectedOption.id);
   console.log("\n" + selectedRow.text);
 }
 
-async function deleteMemo(memo) {
-  const allMemos = await memo.selectAll();
+async function deleteMemo(db) {
+  const allMemos = await db.selectAll("memos");
   if (!existsMemo(allMemos)) {
     return;
   }
@@ -85,7 +85,7 @@ async function deleteMemo(memo) {
   const select = new Select(options);
   const selectedOption = await select.selectItem("id", "delete");
 
-  await memo.delete(selectedOption.id);
+  await db.delete("memos", selectedOption.id);
   console.log("\nDeletion is complete.");
 }
 
