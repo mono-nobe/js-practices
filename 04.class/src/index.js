@@ -52,8 +52,7 @@ async function createMemo(memo) {
 
 async function showAllMemos(memo) {
   const allMemos = await memo.selectAll();
-  if (allMemos.length === 0) {
-    console.log("memo is empty.");
+  if (!existsMemo(allMemos)) {
     return;
   }
 
@@ -64,8 +63,7 @@ async function showAllMemos(memo) {
 
 async function showMemo(memo) {
   const allMemos = await memo.selectAll();
-  if (allMemos.length === 0) {
-    console.log("memo is empty.");
+  if (!existsMemo(allMemos)) {
     return;
   }
 
@@ -79,8 +77,7 @@ async function showMemo(memo) {
 
 async function deleteMemo(memo) {
   const allMemos = await memo.selectAll();
-  if (allMemos.length === 0) {
-    console.log("memo is empty.");
+  if (!existsMemo(allMemos)) {
     return;
   }
 
@@ -97,6 +94,15 @@ async function generateOptions(targets) {
     name: target.text.split("\n")[0],
     value: target.id,
   }));
+}
+
+function existsMemo(memos) {
+  if (memos.length === 0) {
+    console.log("memo is empty.");
+    return false;
+  }
+
+  return true;
 }
 
 main();
