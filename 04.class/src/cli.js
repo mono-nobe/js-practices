@@ -2,9 +2,12 @@
 
 const { prompt } = require("enquirer");
 
-module.exports = class Select {
+module.exports = class CLI {
   constructor(selectItems) {
-    this.selectItems = selectItems;
+    this.selectItems = selectItems.map((item) => ({
+      name: item.text.split("\n")[0],
+      value: item.id,
+    }));
   }
 
   selectItem(name, action) {
