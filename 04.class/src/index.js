@@ -5,8 +5,10 @@ const Select = require("./select");
 const Minimist = require("minimist");
 const Readline = require("readline");
 
+const DBFilePath = "./db/memo.sqlite3";
+
 async function main() {
-  const memo = new Memo();
+  const memo = new Memo(DBFilePath);
   const argv = Minimist(process.argv.slice(2));
 
   if (!process.stdin.isTTY) {

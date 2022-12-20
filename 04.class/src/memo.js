@@ -3,8 +3,8 @@
 const Sqlite3 = require("sqlite3");
 
 module.exports = class Memo {
-  constructor() {
-    this.sqlite3 = new Sqlite3.Database("./db/memo.sqlite3");
+  constructor(filePath) {
+    this.sqlite3 = new Sqlite3.Database(filePath);
   }
 
   selectAll() {
