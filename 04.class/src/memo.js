@@ -1,4 +1,4 @@
-const CLI = require("./cli");
+const Menu = require("./menu");
 
 module.exports = class Memo {
   constructor(db) {
@@ -38,12 +38,12 @@ module.exports = class Memo {
     }
     const selectedMemo = await this.#select(allMemos, "delete");
     await this.db.delete("memos", selectedMemo.id);
-    console.log("\nDeletion is complete.");
+    console.log("\nDeleting memo is complete.");
   }
 
   async #select(memos, purpose) {
-    const memoCLI = new CLI(memos);
-    return await memoCLI.selectItem("id", purpose);
+    const menu = new Menu(memos);
+    return await menu.choose("id", purpose);
   }
 
   #existsMemo(memos) {
