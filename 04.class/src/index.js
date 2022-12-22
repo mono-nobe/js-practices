@@ -1,15 +1,15 @@
 #! /usr/bin/env node
 
-const DB = require("./db");
+const Table = require("./table");
 const Memo = require("./memo");
 const Minimist = require("minimist");
 const Readline = require("readline");
-
-const DBFilePath = "./db/memo.sqlite3";
+const Sqlite3 = require("sqlite3");
 
 async function main() {
-  const db = new DB(DBFilePath);
-  const memo = new Memo(db);
+  const sqlite3 = new Sqlite3.Database("./db/memo.sqlite3");
+  const memoTable = new Table(sqlite3, "memos");
+  const memo = new Memo(memoTable);
   const argv = Minimist(process.argv.slice(2));
 
   if (!process.stdin.isTTY) {
@@ -25,7 +25,7 @@ async function main() {
     await memo.delete();
   }
 
-  db.close();
+  sqlite3.close();
 }
 
 function readStdin() {
